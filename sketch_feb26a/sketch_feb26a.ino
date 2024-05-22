@@ -1,9 +1,9 @@
 #include <Servo.h>
 
 #define firstMode 63 //Soutěž reakčního času
-#define secondMode 149 //
-#define thirdMode 324
-#define fourthMode 676
+#define secondMode 149 //Ukazatel vzdálenosti
+#define thirdMode 324 //
+#define fourthMode 676 //
 
 int (*loopFunction[1]) ();
 
