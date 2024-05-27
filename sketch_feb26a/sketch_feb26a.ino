@@ -1,8 +1,12 @@
+#include <Arduino.h>
 #include <Servo.h>
+#include <Wire.h>
+#include <Adafruit_BMP085.h>
+#include <TM1637Display.h>
 
 #define firstMode 63 //Soutěž reakčního času
 #define secondMode 149 //Ukazatel vzdálenosti
-#define thirdMode 324 //
+#define thirdMode 324 //Pokojový teploměr
 #define fourthMode 676 //
 
 int (*loopFunction[1]) ();
@@ -202,6 +206,47 @@ class SecondMode{
 };
 
 /*
+----------------------------------------------------------------------- Third Mode --------------------------------------------------------------------------
+*/
+
+class ThirdMode{
+
+static inline int CLK = 2;
+static inline int DIO = 3;
+
+static inline uint8_t segments[] = {
+  SEG_G | SEG_A | SEG_B | SEG_F,
+  SEG_A | SEG_F | SEG_E | SEG_D
+};
+
+static inline Adafruit_BMP085 bmp180;
+static inline TM1637Display displej = TM1637Display(CLK, DIO);
+static inline int korekce = 32;
+static inline int teplota;
+
+public:
+
+static void thirdModeSetup() {
+
+  Wire.begin(); 
+  Serial.begin(9600);
+  bmp180.begin();
+  displej.clear();
+  displej.setBrightness(10);
+
+}
+
+static void thirdModeLoop() {
+  int temprature = bmp180.readTemperature();
+  Serial.println(temprature);
+  displej.showNumberDecEx(temprature, false, 2, 2);
+  displej.setSegments(segments, 2, 2);
+  delay(1000);
+}
+
+};
+
+/*
 --------------------------------------------------------------------------- Main --------------------------------------------------------------------------
 */
 
@@ -219,6 +264,7 @@ void setup() {
       case firstMode:
         loopFunction[0] = FirstMode::firstModeLoop;
         FirstMode::firstModeSetup();
+        again = false;
         break;
 
       case secondMode:
@@ -228,6 +274,9 @@ void setup() {
         break;
 
       case thirdMode:
+        loopFunction[0] = ThirdMode::thirdModeLoop;
+        ThirdMode::thirdModeSetup();
+        again = false;
         break;
 
       case fourthMode:
