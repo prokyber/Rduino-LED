@@ -4,10 +4,10 @@
 #include <Adafruit_BMP085.h>
 #include <TM1637Display.h>
 
-#define firstMode 63 //Soutěž reakčního času
-#define secondMode 149 //Ukazatel vzdálenosti
-#define thirdMode 324 //Pokojový teploměr
-#define fourthMode 676 //
+#define firstMode 40 ... 110//(62)Soutěž reakčního času
+#define secondMode 111 ... 250 //(148)Ukazatel vzdálenosti
+#define thirdMode 251 ... 450 //(324)Pokojový teploměr
+#define fourthMode 451 ... 1023 //(676)
 
 int (*loopFunction[1]) ();
 
