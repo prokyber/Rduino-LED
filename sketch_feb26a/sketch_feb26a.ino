@@ -1,3 +1,5 @@
+//#define DEBUG
+
 #include <Arduino.h>
 #include <Servo.h>
 #include <Wire.h>
@@ -62,6 +64,9 @@ class FirstMode {
       randomSeed(analogRead(0));
       srand(random(300));
 
+      #ifdef DEBUG
+        Serial.println("First mode begins now...");
+      #endif
 
       // LEDka nám třikrát blikne a pak se zhasne
       for(int i = 1; i <= 3; i++){
@@ -161,6 +166,10 @@ class SecondMode{
       pinMode(6, OUTPUT);
       pinMode(7, OUTPUT);
 
+      #ifdef DEBUG
+        Serial.println("Second mode begins now...");
+      #endif
+
     }
 
 
@@ -229,16 +238,19 @@ public:
 static void thirdModeSetup() {
 
   Wire.begin(); 
-  Serial.begin(9600);
   bmp180.begin();
   displej.clear();
   displej.setBrightness(10);
-
+  #ifdef DEBUG
+    Serial.println("Third mode begins now...");
+  #endif
 }
 
 static void thirdModeLoop() {
   int temprature = bmp180.readTemperature();
-  Serial.println(temprature);
+  #ifdef DEBUG
+    Serial.println(temprature);
+  #endif
   displej.showNumberDecEx(temprature, false, 2, 2);
   displej.setSegments(segments, 2, 2);
   delay(1000);
@@ -252,10 +264,11 @@ static void thirdModeLoop() {
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
   pinMode(A0, INPUT);
   bool again = true;
-  Serial.begin(9600);
+  #ifdef DEBUG
+    Serial.begin(9600);
+  #endif
   while(again)
   {
     int choice = int(analogRead(A0));
@@ -289,6 +302,3 @@ void loop() {
   // put your main code here, to run repeatedly:
   loopFunction[0]();
 }
-
-
-
